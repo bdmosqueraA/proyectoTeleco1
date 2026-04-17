@@ -21,12 +21,18 @@ const IconInbox = () => (
   </svg>
 );
 
-function formatDateTime(iso) {
-  const d = new Date(iso);
-  return d.toLocaleString('es-CO', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  });
+const WEATHER_LABELS = {
+  SOLEADO: { text: 'Soleado', className: 'badge-sunny' },
+  NUBLADO: { text: 'Nublado', className: 'badge-cloudy' },
+  LLUVIOSO: { text: 'Lluvioso', className: 'badge-rainy' },
+};
+
+function formatDate(iso) {
+  return new Date(iso).toLocaleDateString('es-CO', { dateStyle: 'medium' });
+}
+
+function formatTime(iso) {
+  return new Date(iso).toLocaleTimeString('es-CO', { timeStyle: 'short' });
 }
 
 export default function TripHistoryPage() {
@@ -78,21 +84,32 @@ export default function TripHistoryPage() {
               <tr>
                 <th>Ruta</th>
                 <th>Bus</th>
-                <th>Hora de Salida</th>
+                <th>Fecha</th>
+                <th>Hora</th>
                 <th>Pasajeros</th>
+                <th>Clima</th>
+                <th>Sem. Acad.</th>
+                <th>Evento</th>
                 <th>Registrado por</th>
               </tr>
             </thead>
             <tbody>
-              {trips.map((trip) => (
-                <tr key={trip.id}>
-                  <td>{trip.route_id}</td>
-                  <td>{trip.bus_id}</td>
-                  <td>{formatDateTime(trip.departure_time)}</td>
-                  <td>{trip.passenger_count}</td>
-                  <td>{trip.registered_by}</td>
-                </tr>
-              ))}
+              {trips.map((trip) => {
+                const w = WEATHER_LABELS[trip.weather] || { text: trip.weather || '—', className: '' };
+                return (
+                  <tr key={trip.id}>
+                    <td>{trip.route_id}</td>
+                    <td>{trip.bus_id}</td>
+                    <td>{formatDate(trip.departure_time)}</td>
+                    <td>{formatTime(trip.departure_time)}</td>
+                    <td>{trip.passenger_count}</td>
+                    <td><span className={`table-badge ${w.className}`}>{w.text}</span></td>
+                    <td>{trip.academic_week ?? '—'}</td>
+                    <td>{trip.special_event ? 'Sí' : 'No'}</td>
+                    <td>{trip.registered_by}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
