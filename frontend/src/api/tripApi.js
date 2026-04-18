@@ -1,4 +1,5 @@
-const TRIP_BASE = 'http://localhost:8000';
+//const TRIP_BASE = 'http://localhost:8000';
+const TRIP_BASE = '';
 
 function authHeaders(token) {
   return {

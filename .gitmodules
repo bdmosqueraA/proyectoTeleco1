@@ -1,0 +1,3 @@
+[submodule "mini-identity-api-dotnet"]
+	path = mini-identity-api-dotnet
+	url = https://github.com/wolfcor10/mini-identity-api-dotnet.git

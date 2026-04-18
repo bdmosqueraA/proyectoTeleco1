@@ -93,6 +93,7 @@ Table showing all registered trip records.
 
 Features:
 - Nine-column table: Route, Bus, Date, Time, Passengers, Weather (colored badge), Academic Week, Special Event, Registered By.
+- **CSV export**: download all trip records as a `.csv` file (client-side generation with UTF-8 BOM for Excel compatibility).
 - Empty state with icon when no trips exist.
 - Navigation to register new trip or return to dashboard.
 
@@ -159,21 +160,35 @@ The UI uses a premium dark-mode design with:
 
 ## Vite proxy configuration
 
-To avoid CORS issues with MiniIdentity (which does not have CORS enabled), Vite's dev server proxies `/api` requests:
+All API requests are routed through Vite's dev server proxy. This avoids CORS issues and enables LAN access from other devices.
 
 ```js
 // vite.config.js
 server: {
   proxy: {
     '/api': {
-      target: 'http://localhost:5000',
+      target: 'http://localhost:5000',   // MiniIdentity
       changeOrigin: true,
+    },
+    '/routes': {
+      target: 'http://localhost:8000',   // trip-log-service
+      changeOrigin: true,
+      bypass(req) {
+        if (req.headers.accept?.includes('text/html')) return req.url;
+      },
+    },
+    '/trips': {
+      target: 'http://localhost:8000',   // trip-log-service
+      changeOrigin: true,
+      bypass(req) {
+        if (req.headers.accept?.includes('text/html')) return req.url;
+      },
     },
   },
 }
 ```
 
-This means the frontend calls `/api/auth/login` (relative), and Vite forwards it to `http://localhost:5000/api/auth/login`.
+The `bypass` function ensures that browser page refreshes (which send `Accept: text/html`) are served by the SPA instead of being proxied to the backend (which would return 401).
 
 ---
 
@@ -216,8 +231,8 @@ The frontend requires both backends to be running:
 
 ## Important notes
 
-- The frontend **never** communicates directly with `localhost:5000` from the browser. All auth requests go through Vite's proxy to avoid CORS.
-- The frontend communicates directly with `localhost:8000` for trip data (trip-log-service has CORS enabled).
+- The frontend **never** communicates directly with backend ports from the browser. All requests go through Vite's proxy (`/api` → port 5000, `/routes` and `/trips` → port 8000).
+- This proxy architecture enables LAN access: other devices only need to reach port 5173.
 - JWT tokens are stored in `localStorage` under the key `smartbus_token`.
 - MiniIdentity returns `accessToken` in its login response; `authApi.js` normalizes this to `token` for internal consistency.
 - The `sub` claim in MiniIdentity JWTs contains a UUID, not the username. The username is in `unique_name`.

@@ -11,6 +11,22 @@ export default defineConfig({
         target: 'http://localhost:5000',
         changeOrigin: true,
       },
+      // Forward /routes and /trips to trip-log-service (FastAPI)
+      // bypass: if browser is requesting HTML (page refresh), serve the SPA instead
+      '/routes': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        bypass(req) {
+          if (req.headers.accept?.includes('text/html')) return req.url;
+        },
+      },
+      '/trips': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        bypass(req) {
+          if (req.headers.accept?.includes('text/html')) return req.url;
+        },
+      },
     },
   },
 })

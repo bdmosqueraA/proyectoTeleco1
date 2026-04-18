@@ -1,0 +1,4 @@
+﻿Ruta,Bus,Fecha,Hora,Pasajeros,Clima,Semana Académica,Evento Especial,Registrado por,Notas
+PARQUE,NBU-01,17/04/2026,4:31 p. m.,60,LLUVIOSO,10,No,testuser,Accidente en carretera 
+PARQUE,BUS-02,17/04/2026,2:42 p. m.,50,LLUVIOSO,10,No,testuser,
+PARQUE,BUS-03,17/04/2026,6:00 p. m.,30,NUBLADO,10,Sí,testuser,

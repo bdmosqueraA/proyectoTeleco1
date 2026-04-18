@@ -36,7 +36,7 @@ async def create_trip(body: TripCreate, user: str = Depends(get_current_user)):
 async def trip_stats(user: str = Depends(get_current_user)):
     """Return occupancy summary statistics.
 
-    ⚠️ This route is registered before ``/trips/{trip_id}`` so FastAPI
+     This route is registered before ``/trips/{trip_id}`` so FastAPI
     does not interpret ``"stats"`` as a path parameter.
     """
     return compute_stats()
