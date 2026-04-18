@@ -25,7 +25,6 @@ MVP/
 ├── trip-log-service/           ← Trip logging microservice (Python · FastAPI)
 ├── frontend/                   ← Web application (React + Vite)
 ├── 01_project_context.md       ← Full project context
-├── 02_mvp_specification.md     ← MVP technical specification
 └── README.md                   ← This file
 ```
 
